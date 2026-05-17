@@ -189,43 +189,28 @@ function Loader() {
   return (
     <motion.div
       className="site-loader"
-      initial={false}
-      animate={{ y: done ? "-100%" : "0%", pointerEvents: done ? "none" : "auto" }}
-      transition={{ duration: 0.9, ease: [0.77, 0, 0.18, 1] }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: done ? 0 : 1, pointerEvents: done ? "none" : "auto" }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
       aria-hidden={done}
     >
-      <div className="loader-bars">
-        {Array.from({ length: 7 }).map((_, index) => (
-          <motion.span
-            key={index}
-            initial={{ scaleY: 1 }}
-            animate={reduceMotion ? { scaleY: 0 } : { scaleY: [1, 1, 0] }}
-            transition={{
-              duration: 1.15,
-              delay: 0.25 + index * 0.08,
-              ease: [0.77, 0, 0.18, 1],
-            }}
-          />
-        ))}
-      </div>
-      <motion.div
-        className="loader-copy"
-        initial={{ opacity: 1, y: 0 }}
-        animate={{ opacity: done ? 0 : 1, y: done ? -20 : 0 }}
-      >
-        <h1>LOADING</h1>
-        <p>Please breathe</p>
-        <strong ref={progressRef}>0<span>%</span></strong>
-        <div className="loader-track">
-          <motion.i
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: reduceMotion ? 0.1 : 1.15, ease: "easeInOut" }}
+      <div className="simple-loader-content">
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5], scale: [0.96, 1, 0.96] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Logo />
+        </motion.div>
+        
+        <div className="small-progress-track">
+          <motion.div 
+            className="small-progress-fill"
+            initial={{ width: "0%" }}
+            animate={{ width: done ? "100%" : "75%" }}
+            transition={{ duration: done ? 0.3 : 3.5, ease: "easeOut" }}
           />
         </div>
-        <p>Preparing your wellness space</p>
-        <small>READY</small>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
