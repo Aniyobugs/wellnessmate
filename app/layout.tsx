@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SmoothScrolling from "./SmoothScrolling";
 
 export const metadata: Metadata = {
   title: "Lumina Wellness Coach",
@@ -14,7 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SmoothScrolling>
+          <div className="noise-overlay" aria-hidden="true" />
+          {children}
+        </SmoothScrolling>
+      </body>
     </html>
   );
 }
