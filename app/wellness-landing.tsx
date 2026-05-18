@@ -18,15 +18,19 @@ import {
   ArrowUp,
   Check,
   Flower2,
-  Handshake,
+  Heart,
   Leaf,
   Menu,
+  MessageCircle,
+  MoreHorizontal,
   MousePointer2,
+  Repeat2,
   Sprout,
   Sun,
   X,
 } from "lucide-react";
-import { useEffect, useState, useRef, type ComponentType, type ReactNode, type SVGProps } from "react";
+import React, { useEffect, useState, useRef, Fragment, type ComponentType, type ReactNode, type SVGProps } from "react";
+import type { Variants } from "framer-motion";
 import { useLenis } from "lenis/react";
 
 type Icon = ComponentType<
@@ -420,12 +424,12 @@ function HeroContent() {
     }
   };
 
-  const itemVariants: any = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }
   };
 
-  const wordVariants: any = {
+  const wordVariants: Variants = {
     hidden: { y: "120%", rotate: 4, opacity: 0 },
     show: { y: "0%", rotate: 0, opacity: 1, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }
   };
@@ -716,47 +720,6 @@ function ProcessGraphic() {
   );
 }
 
-function AnimatedHandshake() {
-  const scrollYProgress = useMotionValue(0);
-  useLenis(({ progress }) => {
-    scrollYProgress.set(progress);
-  });
-  
-  const y = useTransform(scrollYProgress, [0.5, 1], [200, -200]);
-  const rotate = useTransform(scrollYProgress, [0.5, 1], [-12, 12]);
-  const scale = useTransform(scrollYProgress, [0.5, 0.75, 1], [0.85, 1.05, 0.85]);
-
-  return (
-    <motion.div 
-      style={{
-        position: 'absolute',
-        top: 'clamp(20px, 8vw, 150px)',
-        right: 'clamp(0px, 2vw, 40px)',
-        width: 'clamp(220px, 35vw, 650px)',
-        height: 'clamp(220px, 35vw, 650px)',
-        zIndex: 10,
-        pointerEvents: 'none',
-        display: 'grid',
-        placeItems: 'center',
-        y,
-        rotate,
-        scale
-      }}
-      aria-hidden
-    >
-      <motion.div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(circle at center, rgba(163, 177, 138, 0.12) 0%, transparent 65%)',
-          borderRadius: '50%',
-        }}
-      />
-      <Handshake color="var(--olive)" size="90%" strokeWidth={0.4} opacity={0.35} />
-    </motion.div>
-  );
-}
-
 function ProgramHoverList() {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -875,7 +838,7 @@ function WellnessAudit() {
     setStep(s => s + 1);
   };
 
-  const variants: any = {
+  const variants: Variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 40 : -40,
       opacity: 0,
@@ -932,7 +895,7 @@ function WellnessAudit() {
               <motion.div key="outro" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" className="audit-step">
                 <Leaf size={48} strokeWidth={1} color="var(--olive)" style={{ marginBottom: 24 }} />
                 <h2>Thank you for sharing.</h2>
-                <p>Based on your responses, I have a clear picture of how we can rebuild your baseline. Let's map out your exact next steps.</p>
+                <p>Based on your responses, I have a clear picture of how we can rebuild your baseline. Let&apos;s map out your exact next steps.</p>
                 <MagneticButton href="#contact" variant="primary">Schedule Your Strategy Call</MagneticButton>
               </motion.div>
             )}
@@ -946,71 +909,236 @@ function WellnessAudit() {
 const testimonials = [
   {
     name: "Sarah J.",
-    tag: "Verified Client",
+    username: "sarahjwell",
+    date: "8:42 AM - May 12, 2026",
     quote: "I used to wake up feeling already behind. Lumina completely rebuilt my foundation. For the first time in years, I feel light.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=300&h=300&auto=format&fit=crop",
+    metrics: { replies: "18", reposts: "72", likes: "1.2K" },
   },
   {
     name: "Elena M.",
-    tag: "Verified Client",
+    username: "elena.moves",
+    date: "6:15 PM - May 7, 2026",
     quote: "The approach is so gentle yet remarkably profound. I finally have sustainable habits that don't feel like a chore.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300&h=300&auto=format&fit=crop",
+    metrics: { replies: "11", reposts: "54", likes: "948" },
   },
   {
     name: "Marcus T.",
-    tag: "Verified Client",
+    username: "marcustreset",
+    date: "11:03 AM - Apr 28, 2026",
     quote: "I thought stress was the price of my career. The Deep Wellness Lab changed everything. I have my energy back.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&h=300&auto=format&fit=crop",
+    metrics: { replies: "24", reposts: "91", likes: "1.8K" },
   },
   {
     name: "Amira L.",
-    tag: "Verified Client",
+    username: "amirainflow",
+    date: "9:31 PM - Apr 19, 2026",
     quote: "A truly transformative experience. I learned how to listen to my body instead of constantly fighting it.",
-    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1964&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=300&h=300&auto=format&fit=crop",
+    metrics: { replies: "15", reposts: "63", likes: "1.1K" },
   }
 ];
 
-function ClientTransformations() {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
+function TweetTestimonialCard({
+  testimonial,
+}: {
+  testimonial: (typeof testimonials)[number];
+}) {
+  return (
+    <article
+      className="tweet-card"
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        flexShrink: 0,
+        width: "clamp(310px, 34vw, 430px)",
+        minHeight: 268,
+        padding: 22,
+        overflow: "hidden",
+        border: "1px solid rgba(110, 119, 88, 0.2)",
+        borderRadius: 18,
+        color: "var(--ink)",
+        background:
+          "linear-gradient(180deg, rgba(255, 253, 248, 0.92), rgba(255, 253, 248, 0.68)), rgba(255, 255, 255, 0.58)",
+        boxShadow: "0 18px 58px rgba(39, 46, 31, 0.08)",
+        backdropFilter: "blur(18px)",
+      }}
+    >
+      <div
+        className="tweet-glow"
+        style={{
+          position: "absolute",
+          inset: "-45% -20% auto auto",
+          width: 220,
+          height: 220,
+          borderRadius: "50%",
+          background: "rgba(200, 242, 74, 0.3)",
+          filter: "blur(46px)",
+          pointerEvents: "none",
+        }}
+        aria-hidden
+      />
+      <header
+        className="tweet-header"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "grid",
+          gridTemplateColumns: "48px 1fr auto",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <Image
+          className="tweet-avatar"
+          src={testimonial.image}
+          alt={`${testimonial.name} portrait`}
+          width={48}
+          height={48}
+          style={{
+            width: 48,
+            height: 48,
+            border: "1px solid rgba(110, 119, 88, 0.22)",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+        />
+        <div className="tweet-identity" style={{ minWidth: 0 }}>
+          <div
+            className="tweet-name-line"
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <strong style={{ fontSize: "0.98rem", fontWeight: 800, lineHeight: 1.1 }}>
+              {testimonial.name}
+            </strong>
+            <span
+              className="tweet-verified"
+              style={{
+                display: "inline-grid",
+                width: 18,
+                height: 18,
+                placeItems: "center",
+                borderRadius: "50%",
+                color: "var(--ink)",
+                background: "var(--lime)",
+              }}
+              aria-label="Verified client"
+            >
+              <Check size={12} strokeWidth={3} aria-hidden />
+            </span>
+          </div>
+          <span style={{ color: "rgba(26, 26, 26, 0.52)", fontSize: "0.88rem" }}>
+            @{testimonial.username}
+          </span>
+        </div>
+        <MoreHorizontal
+          className="tweet-more"
+          size={20}
+          strokeWidth={1.8}
+          style={{ color: "rgba(26, 26, 26, 0.42)" }}
+          aria-hidden
+        />
+      </header>
 
-  useEffect(() => {
-    const updateWidth = () => {
-      if (carouselRef.current) {
-        setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
-      }
-    };
-    
-    updateWidth();
-    // Use a short timeout to ensure images/fonts have shifted layout
-    setTimeout(updateWidth, 200);
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
+      <p
+        className="tweet-body"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          margin: "22px 0 18px",
+          color: "#20241d",
+          fontSize: "clamp(1rem, 1.3vw, 1.18rem)",
+          lineHeight: 1.62,
+        }}
+      >
+        {testimonial.quote}
+      </p>
+
+      <time
+        className="tweet-date"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "block",
+          marginTop: "auto",
+          paddingTop: 6,
+          color: "rgba(26, 26, 26, 0.52)",
+          fontSize: "0.88rem",
+        }}
+      >
+        {testimonial.date}
+      </time>
+
+      <footer
+        className="tweet-actions"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 20,
+          marginTop: 18,
+          paddingTop: 18,
+          borderTop: "1px solid rgba(110, 119, 88, 0.16)",
+        }}
+        aria-label="Testimonial engagement"
+      >
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+          <MessageCircle size={17} strokeWidth={1.8} aria-hidden />
+          {testimonial.metrics.replies}
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+          <Repeat2 size={17} strokeWidth={1.8} aria-hidden />
+          {testimonial.metrics.reposts}
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+          <Heart size={17} strokeWidth={1.8} aria-hidden />
+          {testimonial.metrics.likes}
+        </span>
+      </footer>
+    </article>
+  );
+}
+
+function ClientTransformations() {
+  const reduceMotion = useReducedMotion();
+
+  const marqueeItems = [...testimonials, ...testimonials, ...testimonials, ...testimonials];
 
   return (
-    <section className="testimonials-section">
+    <section className="testimonials-section" style={{ paddingTop: "clamp(120px, 14vw, 180px)" }}>
       <div className="testimonials-header">
         <p className="section-kicker">Client Transformations</p>
         <h2>Real stories. Real balance.</h2>
       </div>
 
-      <div className="carousel-wrapper" ref={carouselRef}>
+      <div
+        className="carousel-wrapper tweet-carousel"
+        style={{
+          overflow: "hidden",
+          padding: "0 clamp(28px, 6vw, 100px)",
+          cursor: "default",
+          maskImage: "linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%)",
+        }}
+      >
         <motion.div 
-          className="carousel-track" 
-          drag="x" 
-          dragConstraints={{ right: 0, left: -width }}
-          whileTap={{ cursor: "grabbing" }}
+          className="carousel-track"
+          style={{
+            display: "flex",
+            flexWrap: "nowrap",
+            gap: 24,
+            width: "max-content",
+            padding: "8px 0 18px",
+          }}
+          animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
         >
-          {testimonials.map((t, i) => (
-            <motion.div className="testimonial-card" key={i}>
-              <Image src={t.image} alt={t.name} fill className="t-image" sizes="(max-width: 820px) 90vw, 400px" />
-              <div className="t-overlay">
-                <div className="t-tag"><Check size={12} strokeWidth={3} /> {t.tag}</div>
-                <p className="t-quote">&quot;{t.quote}&quot;</p>
-                <p className="t-name">&mdash; {t.name}</p>
-              </div>
-            </motion.div>
+          {marqueeItems.map((t, i) => (
+            <TweetTestimonialCard testimonial={t} key={`${t.username}-${i}`} />
           ))}
         </motion.div>
       </div>
@@ -1145,19 +1273,13 @@ export default function WellnessLanding() {
         <motion.div
           className="strip-row"
           animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
-          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
         >
-          {[...specialties, ...specialties, ...specialties, ...specialties].map((item, index) => (
-            <span key={`${item}-${index}`}>{item}</span>
-          ))}
-        </motion.div>
-        <motion.div
-          className="strip-row reverse"
-          animate={reduceMotion ? undefined : { x: ["-50%", "0%"] }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        >
-          {[...specialties].reverse().concat([...specialties].reverse(), [...specialties].reverse(), [...specialties].reverse()).map((item, index) => (
-            <span key={`${item}-reverse-${index}`}>{item}</span>
+          {[...specialties, ...specialties, ...specialties, ...specialties, ...specialties].map((item, index) => (
+            <React.Fragment key={`${item}-${index}`}>
+              <span>{item}</span>
+              <Leaf size={14} strokeWidth={2} style={{ opacity: 0.5, color: "var(--olive)" }} aria-hidden />
+            </React.Fragment>
           ))}
         </motion.div>
       </section>
