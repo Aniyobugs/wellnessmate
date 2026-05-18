@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   animate,
   AnimatePresence,
@@ -16,7 +17,9 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUp,
+  BookOpen,
   Check,
+  Clock,
   Flower2,
   Heart,
   Leaf,
@@ -25,6 +28,7 @@ import {
   MoreHorizontal,
   MousePointer2,
   Repeat2,
+  Sparkles,
   Sprout,
   Sun,
   X,
@@ -114,14 +118,38 @@ const programs = [
   },
 ];
 
-const manifesto = [
-  "Start softer",
-  "Listen deeper",
-  "Move daily",
-  "Nourish simply",
-  "Recover fully",
-  "Live awake",
+const blogPosts = [
+  {
+    title: "How to reset your nervous system before the day owns you",
+    category: "Stress Reset",
+    readTime: "6 min read",
+    body: "A gentle morning sequence for breath, hydration, light, and the first decision of the day.",
+    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=900&auto=format&fit=crop",
+  },
+  {
+    title: "The no-pressure guide to building a movement rhythm",
+    category: "Movement",
+    readTime: "5 min read",
+    body: "Make exercise feel like care again with small cues, soft goals, and recovery built in.",
+    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=900&auto=format&fit=crop",
+  },
+  {
+    title: "What your cravings might be trying to tell you",
+    category: "Nourishment",
+    readTime: "7 min read",
+    body: "A practical look at energy dips, emotional hunger, and simple meal anchors.",
+    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=900&auto=format&fit=crop",
+  },
+  {
+    title: "A calmer evening routine for deeper sleep",
+    category: "Sleep",
+    readTime: "4 min read",
+    body: "Three sensory switches that help your body understand the day is complete.",
+    image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf484?q=80&w=900&auto=format&fit=crop",
+  },
 ];
+
+const blogCategories = ["Mindfulness", "Nutrition", "Movement", "Sleep", "Stress"];
 
 function Loader() {
   const reduceMotion = useReducedMotion();
@@ -1146,6 +1174,168 @@ function ClientTransformations() {
   );
 }
 
+function BlogSection() {
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const featuredPost = blogPosts[0];
+  const secondaryPosts = blogPosts.slice(1);
+
+  useEffect(() => {
+    if (reduceMotion || !sectionRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const context = gsap.context(() => {
+      gsap.fromTo(
+        ".blog-gsap-reveal",
+        { autoAlpha: 0, y: 56, filter: "blur(10px)" },
+        {
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1,
+          stagger: 0.09,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 72%",
+          },
+        }
+      );
+
+      gsap.to(".blog-orb", {
+        yPercent: -18,
+        rotate: 18,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => context.revert();
+  }, [reduceMotion]);
+
+  const tiltCard = (event: React.MouseEvent<HTMLElement>) => {
+    if (reduceMotion) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 7;
+    const rotateX = -((event.clientY - rect.top) / rect.height - 0.5) * 7;
+
+    gsap.to(event.currentTarget, {
+      rotateX,
+      rotateY,
+      y: -8,
+      duration: 0.45,
+      ease: "power3.out",
+      transformPerspective: 900,
+    });
+  };
+
+  const resetTilt = (event: React.MouseEvent<HTMLElement>) => {
+    if (reduceMotion) return;
+    gsap.to(event.currentTarget, {
+      rotateX: 0,
+      rotateY: 0,
+      y: 0,
+      duration: 0.55,
+      ease: "elastic.out(1, 0.55)",
+    });
+  };
+
+  return (
+    <section ref={sectionRef} id="blog" className="blog-section" aria-label="Wellness blog">
+      <div className="blog-orb orb-one" aria-hidden />
+      <div className="blog-orb orb-two" aria-hidden />
+
+      <div className="blog-section-header blog-gsap-reveal">
+        <p className="section-kicker">Wellness journal</p>
+        <h2>Field notes for a calmer, better-lived week.</h2>
+        <a className="blog-view-all" href="#contact">
+          <BookOpen size={18} strokeWidth={1.7} aria-hidden />
+          Start with a coaching call
+        </a>
+      </div>
+
+      <div className="blog-category-rail blog-gsap-reveal" aria-label="Blog categories">
+        {blogCategories.map((category) => (
+          <span key={category}>{category}</span>
+        ))}
+      </div>
+
+      <div className="blog-layout">
+        <article
+          className="blog-featured blog-gsap-reveal"
+          onMouseMove={tiltCard}
+          onMouseLeave={resetTilt}
+        >
+          <div className="blog-card-glow" aria-hidden />
+          <div className="blog-featured-image">
+            <Image
+              src={featuredPost.image}
+              alt={featuredPost.title}
+              fill
+              sizes="(max-width: 900px) 92vw, 48vw"
+            />
+          </div>
+          <div className="blog-featured-content">
+            <div className="blog-meta">
+              <span>{featuredPost.category}</span>
+              <span>
+                <Clock size={15} strokeWidth={1.8} aria-hidden />
+                {featuredPost.readTime}
+              </span>
+            </div>
+            <h3>{featuredPost.title}</h3>
+            <p>{featuredPost.body}</p>
+            <a href="#contact" className="blog-card-link">
+              Read the guide
+              <ArrowRight size={18} strokeWidth={1.6} aria-hidden />
+            </a>
+          </div>
+        </article>
+
+        <div className="blog-side-list">
+          {secondaryPosts.map((post, index) => (
+            <article
+              className="blog-mini-card blog-gsap-reveal"
+              key={post.title}
+              onMouseMove={tiltCard}
+              onMouseLeave={resetTilt}
+            >
+              <div className="blog-mini-index">0{index + 2}</div>
+              <div className="blog-mini-image">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 900px) 28vw, 180px"
+                />
+              </div>
+              <div>
+                <div className="blog-meta">
+                  <span>{post.category}</span>
+                  <span>{post.readTime}</span>
+                </div>
+                <h3>{post.title}</h3>
+                <p>{post.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="blog-bottom-bar blog-gsap-reveal">
+        <Sparkles size={19} strokeWidth={1.6} aria-hidden />
+        <span>New journal notes every week for calmer routines and steadier energy.</span>
+      </div>
+    </section>
+  );
+}
+
 export default function WellnessLanding() {
   const [menuOpen, setMenuOpen] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -1404,21 +1594,9 @@ export default function WellnessLanding() {
 
       <ClientTransformations />
 
-      <section className="manifesto-section">
-        {manifesto.map((line, index) => (
-          <motion.h2
-            key={line}
-            initial={{ opacity: 0.18, x: index % 2 ? 70 : -70 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.52 }}
-            transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {line}
-          </motion.h2>
-        ))}
-      </section>
+      <BlogSection />
 
-        <WellnessAudit />
+      <WellnessAudit />
 
       <section id="contact" className="contact-finale">
         <Reveal>
