@@ -9,6 +9,7 @@ import {
   CalendarDays,
   Heart,
   Leaf,
+  Menu,
   MessageCircle,
   MoreHorizontal,
   Plus,
@@ -179,6 +180,7 @@ function TransformationPhoto({ item, index }: { item: (typeof transformations)[n
 export default function WellnessLanding() {
   const [chatOpen, setChatOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <main className="mission-page">
@@ -187,15 +189,30 @@ export default function WellnessLanding() {
           <strong>Mission 444</strong>
           <Leaf size={24} />
         </a>
-        <nav aria-label="Primary navigation">
+        <nav className={mobileNavOpen ? "is-open" : ""} aria-label="Primary navigation">
           {navItems.map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-")}`}>{item}</a>
+            <a
+              key={item}
+              href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+              onClick={() => setMobileNavOpen(false)}
+            >
+              {item}
+            </a>
           ))}
         </nav>
         <a className="coach-chip" href="#coaches">
           <Image src="/wellness-hero.png" alt="" width={34} height={34} />
           Asuhar B
         </a>
+        <button
+          className="mobile-menu-btn"
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileNavOpen}
+          onClick={() => setMobileNavOpen((open) => !open)}
+        >
+          {mobileNavOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </header>
 
       <section id="home" className="mission-hero">

@@ -108,6 +108,10 @@ button {
   border-radius: 50%;
 }
 
+.mobile-menu-btn {
+  display: none;
+}
+
 .mission-hero {
   padding: 0 clamp(28px, 5.5vw, 82px) clamp(74px, 8vw, 116px);
 }
@@ -1335,10 +1339,63 @@ button {
 @media (max-width: 1080px) {
   .mission-nav {
     grid-template-columns: 1fr auto;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 247, 239, 0.92);
+    backdrop-filter: blur(14px);
   }
 
   .mission-nav nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: clamp(18px, 5.5vw, 82px);
+    left: clamp(18px, 5.5vw, 82px);
+    display: grid;
+    gap: 4px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fffdf8;
+    box-shadow: 0 18px 50px rgba(58, 68, 58, 0.18);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .mission-nav nav.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mission-nav nav a {
+    min-height: 44px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.94rem;
+  }
+
+  .mission-nav nav a:hover {
+    background: #f0ece4;
+  }
+
+  .coach-chip {
     display: none;
+  }
+
+  .mobile-menu-btn {
+    display: grid;
+    justify-self: end;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--green-dark);
+    box-shadow: 0 12px 26px rgba(40, 53, 43, 0.18);
   }
 
   .hero-card-row,
@@ -1396,12 +1453,24 @@ button {
 
 @media (max-width: 640px) {
   .mission-nav {
-    padding: 20px 18px 10px;
+    gap: 12px;
+    padding: 14px 18px 10px;
   }
 
-  .coach-chip {
-    padding-right: 12px;
-    font-size: 0;
+  .mission-nav nav {
+    right: 18px;
+    left: 18px;
+  }
+
+  .mission-brand {
+    min-width: 0;
+    font-size: 1.08rem;
+    letter-spacing: -0.035em;
+  }
+
+  .mobile-menu-btn {
+    width: 44px;
+    height: 44px;
   }
 
   .mission-hero,
