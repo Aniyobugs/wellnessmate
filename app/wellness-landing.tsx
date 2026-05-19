@@ -986,11 +986,11 @@ function TweetTestimonialCard({
         minHeight: 268,
         padding: 22,
         overflow: "hidden",
-        border: "1px solid rgba(110, 119, 88, 0.2)",
+        border: "1px solid var(--line)",
         borderRadius: 18,
         color: "var(--ink)",
         background:
-          "linear-gradient(180deg, rgba(255, 253, 248, 0.92), rgba(255, 253, 248, 0.68)), rgba(255, 255, 255, 0.58)",
+          "linear-gradient(180deg, var(--paper), rgba(255, 255, 255, 0.68)), rgba(255, 255, 255, 0.58)",
         boxShadow: "0 18px 58px rgba(39, 46, 31, 0.08)",
         backdropFilter: "blur(18px)",
       }}
@@ -1003,7 +1003,7 @@ function TweetTestimonialCard({
           width: 220,
           height: 220,
           borderRadius: "50%",
-          background: "rgba(200, 242, 74, 0.3)",
+          background: "rgba(var(--neon-lime-rgb), 0.3)",
           filter: "blur(46px)",
           pointerEvents: "none",
         }}
@@ -1029,7 +1029,7 @@ function TweetTestimonialCard({
           style={{
             width: 48,
             height: 48,
-            border: "1px solid rgba(110, 119, 88, 0.22)",
+            border: "1px solid var(--line)",
             borderRadius: "50%",
             objectFit: "cover",
           }}
@@ -1058,7 +1058,7 @@ function TweetTestimonialCard({
               <Check size={12} strokeWidth={3} aria-hidden />
             </span>
           </div>
-          <span style={{ color: "rgba(26, 26, 26, 0.52)", fontSize: "0.88rem" }}>
+          <span style={{ color: "var(--muted)", fontSize: "0.88rem" }}>
             @{testimonial.username}
           </span>
         </div>
@@ -1066,7 +1066,7 @@ function TweetTestimonialCard({
           className="tweet-more"
           size={20}
           strokeWidth={1.8}
-          style={{ color: "rgba(26, 26, 26, 0.42)" }}
+          style={{ color: "var(--muted)" }}
           aria-hidden
         />
       </header>
@@ -1093,7 +1093,7 @@ function TweetTestimonialCard({
           display: "block",
           marginTop: "auto",
           paddingTop: 6,
-          color: "rgba(26, 26, 26, 0.52)",
+          color: "var(--muted)",
           fontSize: "0.88rem",
         }}
       >
@@ -1111,19 +1111,19 @@ function TweetTestimonialCard({
           gap: 20,
           marginTop: 18,
           paddingTop: 18,
-          borderTop: "1px solid rgba(110, 119, 88, 0.16)",
+          borderTop: "1px solid var(--line)",
         }}
         aria-label="Testimonial engagement"
       >
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
           <MessageCircle size={17} strokeWidth={1.8} aria-hidden />
           {testimonial.metrics.replies}
         </span>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
           <Repeat2 size={17} strokeWidth={1.8} aria-hidden />
           {testimonial.metrics.reposts}
         </span>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "rgba(26, 26, 26, 0.58)", fontSize: "0.88rem", fontWeight: 700 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
           <Heart size={17} strokeWidth={1.8} aria-hidden />
           {testimonial.metrics.likes}
         </span>
@@ -1454,7 +1454,7 @@ export default function WellnessLanding() {
         >
           <path
             d="M0 63C151 125 291 113 461 90C656 64 801 106 979 91C1173 75 1276 45 1440 76V150H0V63Z"
-            fill="#FAF7F2"
+            fill="var(--warm-beige)"
           />
         </svg>
       </section>
@@ -1547,7 +1547,7 @@ export default function WellnessLanding() {
       <section className="process-intro">
         <ProcessGraphic />
         <Reveal>
-          <h2>WE BELIEVE IN A PROCESS THAT WORKS</h2>
+          <h2>We believe in a process that works.</h2>
           <p>
             If you have an idea of the life you want, even if it is only a rough
             feeling, we shape it into rituals you can actually keep.
@@ -1634,7 +1634,7 @@ export default function WellnessLanding() {
         </div>
         
         <div className="footer-massive-text" aria-hidden>
-          LUMINA
+          MISSION 444
         </div>
 
         <div className="footer-bottom">
