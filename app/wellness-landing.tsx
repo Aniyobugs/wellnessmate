@@ -38,23 +38,7 @@ const coaches = [
     name: "Asuhar B",
     rating: "4.9/5",
     lines: ["Strength Training & Mind Reset", "8+ years, Certified Wellness Coach"],
-    image: "/mission444/coach-1.jpg",
-  },
-  {
-    tag: "Limited slots available",
-    role: "Mindfulness & Meditation Expert",
-    name: "David Miller",
-    rating: "4.9/5",
-    lines: ["Meditation, Stress Relief, Mindfulness", "10+ years, Certified Mindfulness Coach"],
-    image: "/mission444/coach-2.jpg",
-  },
-  {
-    tag: "Limited slots available",
-    role: "Nutritionist",
-    name: "Sophia Patel",
-    rating: "4.7/5",
-    lines: ["Diet Planning, Weight Management", "6+ years, Registered Dietitian"],
-    image: "/mission444/coach-3.jpg",
+    image: "/mission444/asuhar-cutout.png",
   },
 ];
 
@@ -122,12 +106,7 @@ const transformations = [
     quote: "The guidance gave me a new lifestyle, not a temporary plan.",
     name: "Mission 444 Member",
   },
-  {
-    title: "Mind Body Reset",
-    image: "/mission444/transformation-7.jpg",
-    quote: "I feel healthy, active, and ready to show up every day.",
-    name: "Coaching Client",
-  },
+  
 ];
 
 const faqs = [
@@ -285,8 +264,11 @@ export default function WellnessLanding() {
 
       <section id="coaches" className="coach-section">
         <Pill>Coach-Profiles</Pill>
-        <h2>Meet Your Wellness Coaches</h2>
-        <div className="coach-grid">
+        <h2>Meet Your Wellness Coach</h2>
+        <p className="section-sub">
+          Personal coaching with structure, accountability, and calm momentum for your next 444 days.
+        </p>
+        <div className="coach-spotlight">
           {coaches.map((coach, index) => (
             <Reveal className="coach-card" delay={index * 0.08} key={coach.role}>
               <div className="coach-image">
@@ -304,6 +286,29 @@ export default function WellnessLanding() {
               </div>
             </Reveal>
           ))}
+          <Reveal className="coach-copy-panel" delay={0.12}>
+            <span className="coach-kicker"><BadgeCheck size={17} /> Mission 444 Method</span>
+            <h3>Built for people who want a plan they can actually follow.</h3>
+            <p>
+              Asuhar blends strength work, habit resets, and simple weekly check-ins so your routine feels clear,
+              measured, and realistic around real life.
+            </p>
+            <div className="coach-highlights">
+              <span><CalendarDays size={18} /> Weekly goal review</span>
+              <span><Repeat2 size={18} /> Habit reset cycles</span>
+              <span><MessageCircle size={18} /> WhatsApp accountability</span>
+              <span><Heart size={18} /> Mind and body balance</span>
+            </div>
+            <div className="coach-metrics">
+              <strong><span>8+</span> years coaching</strong>
+              <strong><span>4.9</span> client rating</strong>
+              <strong><span>1:1</span> guided support</strong>
+            </div>
+            <div className="coach-note">
+              <Bot size={20} />
+              <p>Start with a free consultation, then get a focused plan for training, recovery, and consistency.</p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -324,9 +329,9 @@ export default function WellnessLanding() {
             ))}
           </Reveal>
           <Reveal className="dash-card video-coach" delay={0.05}>
-            <span className="dash-icon">�</span>
-            <h3>WhatsApp Messaging</h3>
-            <p>Connect with certified wellness experts via WhatsApp.</p>
+            <span className="dash-icon">📹</span>
+            <h3>Video Coaching</h3>
+            <p>Connect with certified wellness experts via live video sessions.</p>
             <Image src="/mission444/video-coach.jpg" alt="Live video coaching session" fill sizes="380px" />
           </Reveal>
           <Reveal className="dash-card schedule-card" delay={0.1}>
@@ -436,7 +441,7 @@ export default function WellnessLanding() {
             <h2>“Your transformation starts when your daily promise becomes non-negotiable.”</h2>
             <p>Asuhar B guides Mission 444 clients with structure, accountability, and calm discipline.</p>
           </div>
-          <Image src="/mission444/asuhar-cutout.png" alt="Asuhar B" width={490} height={645} className="asuhar-cutout" />
+          <Image src="/mission444/asuhar-source.png" alt="Asuha r B" width={490} height={645} className="asuhar-cutout" />
         </div>
       </section>
 

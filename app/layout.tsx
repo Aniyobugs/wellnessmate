@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SmoothScrolling from "./SmoothScrolling";
-import WhatsAppButton from "./WhatsAppButton";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wellnessmate-nine.vercel.app"),
@@ -63,7 +63,7 @@ export default function RootLayout({
           <div className="noise-overlay" aria-hidden="true" />
           {children}
         </SmoothScrolling>
-        <WhatsAppButton />
+        
       </body>
     </html>
   );
