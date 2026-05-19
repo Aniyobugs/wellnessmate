@@ -1,17 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
 export default function WhatsAppButton() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   return (
     <motion.a
       href="https://wa.me/" // Add actual WhatsApp number here

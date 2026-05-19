@@ -1,437 +1,170 @@
 "use client";
 
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, useReducedMotion } from "framer-motion";
 import {
-  animate,
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import {
-  ArrowDown,
   ArrowRight,
-  ArrowUp,
-  BookOpen,
-  Check,
-  Clock,
-  Flower2,
+  BadgeCheck,
+  Bot,
+  CalendarDays,
   Heart,
   Leaf,
-  Menu,
   MessageCircle,
   MoreHorizontal,
-  MousePointer2,
+  Plus,
   Repeat2,
   Sparkles,
-  Sprout,
-  Sun,
+  Star,
+  UserRound,
   X,
 } from "lucide-react";
-import React, { useEffect, useState, useRef, Fragment, type ComponentType, type ReactNode, type SVGProps } from "react";
-import type { Variants } from "framer-motion";
-import { useLenis } from "lenis/react";
+import { useState, type ReactNode } from "react";
 
-type Icon = ComponentType<
-  SVGProps<SVGSVGElement> & {
-    size?: number | string;
-    strokeWidth?: number | string;
-  }
->;
+const navItems = ["Why Us", "Coaches", "Testimonials", "Features", "Transformations", "FAQ"];
 
-const navItems = ["Home", "About", "Services", "Programs", "Blog", "Contact"];
+const featureCards = [
+  ["24/7 Support & Guidance", "Connect anytime via AI chat, WhatsApp, and video sessions.", "💬"],
+  ["Proven Results", "85% of clients report improved energy within 4 weeks.", "🏅"],
+  ["Personalized Wellness Plans", "Custom-tailored plans to match your goals and lifestyle.", "📋"],
+  ["Progress Tracking Tools", "Stay on track with real-time insights and goal monitoring.", "📈"],
+  ["Certified Expert Coaches", "Work with top professionals in fitness, nutrition, and mindfulness.", "🧑‍⚕️"],
+  ["Flexible Scheduling", "Book coaching sessions at times that fit your routine.", "🗓️"],
+];
 
-const features: Array<{
-  title: string;
-  body: string;
-  icon: Icon;
-  tone: "sage" | "blush" | "gold";
-}> = [
+const coaches = [
   {
-    title: "Holistic Approach",
-    body: "Mind, body and soul working together.",
-    icon: Sprout,
-    tone: "sage",
+    tag: "Open for bookings",
+    role: "Lead Wellness Coach",
+    name: "Asuhar B",
+    rating: "4.9/5",
+    lines: ["Strength Training & Mind Reset", "8+ years, Certified Wellness Coach"],
+    image: "/mission444/coach-1.jpg",
   },
   {
-    title: "Personalized Plans",
-    body: "Tailored guidance that fits your life.",
-    icon: Flower2,
-    tone: "blush",
+    tag: "Limited slots available",
+    role: "Mindfulness & Meditation Expert",
+    name: "David Miller",
+    rating: "4.9/5",
+    lines: ["Meditation, Stress Relief, Mindfulness", "10+ years, Certified Mindfulness Coach"],
+    image: "/mission444/coach-2.jpg",
   },
   {
-    title: "Lasting Results",
-    body: "Sustainable habits for long-term wellbeing.",
-    icon: Sun,
-    tone: "gold",
+    tag: "Limited slots available",
+    role: "Nutritionist",
+    name: "Sophia Patel",
+    rating: "4.7/5",
+    lines: ["Diet Planning, Weight Management", "6+ years, Registered Dietitian"],
+    image: "/mission444/coach-3.jpg",
   },
 ];
 
-const specialties = ["Nervous System", "Nutrition", "Mindful Movement", "Sleep", "Stress Reset"];
-
-const processSteps = [
+const stories = [
   {
-    title: "Discovery",
-    points: ["Lifestyle audit", "Energy patterns", "Goal mapping"],
+    image: "/mission444/story-1.jpg",
+    quote: "Mission 444 transformed my fitness routine. I feel stronger and more confident every day.",
+    name: "Emily Ross",
+    role: "Wellness Enthusiast",
   },
   {
-    title: "Rituals",
-    points: ["Morning anchors", "Meal rhythm", "Breath practice"],
+    image: "/mission444/story-2.jpg",
+    quote: "Meditation helped me manage stress and sleep better. I finally feel at peace.",
+    name: "David Patel",
+    role: "Mindfulness Client",
   },
   {
-    title: "Coaching",
-    points: ["Weekly check-ins", "Habit refinement", "Mindset support"],
+    image: "/mission444/story-3.jpg",
+    quote: "The plan helped me rebuild endurance and return to movement with confidence.",
+    name: "Marcus Clark",
+    role: "Fitness Client",
   },
   {
-    title: "Integration",
-    points: ["Real-life systems", "Recovery windows", "Progress reviews"],
-  },
-  {
-    title: "Momentum",
-    points: ["Sustainable plan", "Confidence building", "Long-term care"],
-  },
-];
-
-const programs = [
-  {
-    title: "Calm Body Reset",
-    meta: "4 weeks - stress recovery",
-    body: "A guided reset for sleep, breath, food rhythm and gentle movement.",
-    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    title: "Radiant Habits",
-    meta: "8 weeks - daily coaching",
-    body: "Small repeatable practices that create visible energy and steadier moods.",
-    image: "https://images.unsplash.com/photo-1512438248247-f0f2a5a8b7f0?q=80&w=800&auto=format&fit=crop"
-  },
-  {
-    title: "Deep Wellness Lab",
-    meta: "12 weeks - full support",
-    body: "A complete lifestyle rebuild with coaching, rituals, and accountability.",
-    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800&auto=format&fit=crop"
+    image: "/mission444/story-4.jpg",
+    quote: "Eating healthy has never been easier. I have more energy and feel amazing.",
+    name: "Sophia Lee",
+    role: "Nutrition Client",
   },
 ];
 
-const blogPosts = [
+const transformations = [
   {
-    title: "How to reset your nervous system before the day owns you",
-    category: "Stress Reset",
-    readTime: "6 min read",
-    body: "A gentle morning sequence for breath, hydration, light, and the first decision of the day.",
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=900&auto=format&fit=crop",
+    title: "Energy Reset",
+    image: "/mission444/transformation-1.jpg",
+    quote: "I feel stronger, lighter, and more confident in my body.",
+    name: "Mission 444 Client",
   },
   {
-    title: "The no-pressure guide to building a movement rhythm",
-    category: "Movement",
-    readTime: "5 min read",
-    body: "Make exercise feel like care again with small cues, soft goals, and recovery built in.",
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=900&auto=format&fit=crop",
+    title: "Strength & Calm",
+    image: "/mission444/transformation-2.jpg",
+    quote: "The plan helped me rebuild discipline and feel proud again.",
+    name: "Wellness Client",
   },
   {
-    title: "What your cravings might be trying to tell you",
-    category: "Nourishment",
-    readTime: "7 min read",
-    body: "A practical look at energy dips, emotional hunger, and simple meal anchors.",
-    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=900&auto=format&fit=crop",
+    title: "Body Confidence",
+    image: "/mission444/transformation-3.jpg",
+    quote: "Small daily actions became a visible transformation.",
+    name: "Fitness Client",
   },
   {
-    title: "A calmer evening routine for deeper sleep",
-    category: "Sleep",
-    readTime: "4 min read",
-    body: "Three sensory switches that help your body understand the day is complete.",
-    image: "https://images.unsplash.com/photo-1511295742362-92c96b1cf484?q=80&w=900&auto=format&fit=crop",
+    title: "Lifestyle Shift",
+    image: "/mission444/transformation-4.jpg",
+    quote: "My energy, mood, and routine changed completely.",
+    name: "Transformation Client",
+  },
+  {
+    title: "Skin & Wellness",
+    image: "/mission444/transformation-5.jpg",
+    quote: "I learned consistency, nutrition, and self-care that lasts.",
+    name: "Glow Client",
+  },
+  {
+    title: "Confidence Return",
+    image: "/mission444/transformation-6.jpg",
+    quote: "The guidance gave me a new lifestyle, not a temporary plan.",
+    name: "Mission 444 Member",
+  },
+  {
+    title: "Mind Body Reset",
+    image: "/mission444/transformation-7.jpg",
+    quote: "I feel healthy, active, and ready to show up every day.",
+    name: "Coaching Client",
   },
 ];
 
-const blogCategories = ["Mindfulness", "Nutrition", "Movement", "Sleep", "Stress"];
+const faqs = [
+  "How do I choose a coach?",
+  "What happens after the free consultation?",
+  "Can I switch my coach later?",
+  "How does progress tracking work?",
+  "Is in-app messaging available?",
+  "Can I pause my coaching plan anytime?",
+];
 
-function Loader() {
+function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const reduceMotion = useReducedMotion();
-  const [done, setDone] = useState(false);
-  const progressRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const controls = animate(0, 100, {
-      duration: 1.35,
-      ease: [0.77, 0, 0.18, 1],
-      onUpdate: (latest) => {
-        if (progressRef.current) {
-          progressRef.current.innerHTML = `${Math.round(latest)}<span>%</span>`;
-        }
-      }
-    });
-    return () => controls.stop();
-  }, [reduceMotion]);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      const timer = window.setTimeout(() => setDone(true), 250);
-      return () => window.clearTimeout(timer);
-    }
-
-    let isMounted = true;
-    let timeoutId: number;
-
-    const loadAssets = async () => {
-      try {
-        if (document.fonts) {
-          await document.fonts.ready;
-        }
-        
-        const images = Array.from(document.images);
-        const imagePromises = images.map((img) => {
-          if (img.complete) return Promise.resolve();
-          return new Promise((resolve) => {
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
-        });
-
-        await Promise.all(imagePromises);
-      } catch (error) {
-        console.warn("Asset preloading error:", error);
-      }
-    };
-
-    const minWait = new Promise((resolve) => setTimeout(resolve, 1500));
-    const maxWait = new Promise((resolve) => {
-      timeoutId = window.setTimeout(resolve, 4000);
-    });
-
-    Promise.race([
-      Promise.all([loadAssets(), minWait]),
-      maxWait
-    ]).then(() => {
-      if (isMounted) setDone(true);
-    });
-
-    return () => {
-      isMounted = false;
-      window.clearTimeout(timeoutId);
-    };
-  }, [reduceMotion]);
-
   return (
     <motion.div
-      className="site-loader"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: done ? 0 : 1, pointerEvents: done ? "none" : "auto" }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-      aria-hidden={done}
-    >
-      <div className="simple-loader-content">
-        <motion.div
-          animate={{ opacity: [0.5, 1, 0.5], scale: [0.96, 1, 0.96] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Logo />
-        </motion.div>
-        
-        <div className="small-progress-track">
-          <motion.div 
-            className="small-progress-fill"
-            initial={{ width: "0%" }}
-            animate={{ width: done ? "100%" : "75%" }}
-            transition={{ duration: done ? 0.3 : 3.5, ease: "easeOut" }}
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function CursorAura() {
-  const reduceMotion = useReducedMotion();
-  const x = useMotionValue(-20);
-  const y = useMotionValue(-20);
-  const springX = useSpring(x, { stiffness: 420, damping: 34 });
-  const springY = useSpring(y, { stiffness: 420, damping: 34 });
-
-  useEffect(() => {
-    if (reduceMotion) return;
-
-    const onMove = (event: PointerEvent) => {
-      x.set(event.clientX - 5);
-      y.set(event.clientY - 5);
-    };
-
-    window.addEventListener("pointermove", onMove);
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [reduceMotion, x, y]);
-
-  if (reduceMotion) return null;
-
-  return (
-    <>
-      <motion.div className="cursor-dot" style={{ x: springX, y: springY }} />
-      <motion.div
-        className="cursor-label"
-        style={{ x: springX, y: springY }}
-        aria-hidden
-      >
-        flow
-      </motion.div>
-    </>
-  );
-}
-
-function ScrollRail() {
-  const scrollYProgress = useMotionValue(0);
-  const scrollVelocity = useMotionValue(0);
-
-  useLenis(({ progress, velocity }) => {
-    scrollYProgress.set(progress);
-    scrollVelocity.set(velocity);
-  });
-  const scaleY = useSpring(scrollYProgress, { stiffness: 120, damping: 26 });
-  const skewX = useTransform(scrollVelocity, [-20, 0, 20], [15, 0, -15]);
-
-  return (
-    <div className="scroll-rail-wrapper">
-      <motion.span className="scroll-label" style={{ skewX }} aria-hidden>
-        EXPLORE
-      </motion.span>
-      <div className="scroll-rail" aria-hidden>
-        <motion.span style={{ scaleY }} />
-      </div>
-    </div>
-  );
-}
-
-function BackToTop() {
-  const lenis = useLenis();
-  const scrollYProgress = useMotionValue(0);
-  
-  useLenis(({ progress }) => {
-    scrollYProgress.set(progress);
-  });
-
-  const opacity = useTransform(scrollYProgress, [0.1, 0.2], [0, 1]);
-  const pointerEvents = useTransform(scrollYProgress, (p) => (p > 0.1 ? "auto" : "none"));
-  const y = useTransform(scrollYProgress, [0.1, 0.2], [24, 0]);
-
-  const xMouse = useMotionValue(0);
-  const yMouse = useMotionValue(0);
-  const springX = useSpring(xMouse, { stiffness: 260, damping: 18 });
-  const springY = useSpring(yMouse, { stiffness: 260, damping: 18 });
-
-  return (
-    <motion.button
-      className="back-to-top-btn"
-      style={{ opacity, pointerEvents, y, x: springX }}
-      onClick={() => lenis?.scrollTo(0, { duration: 1.5 })}
-      aria-label="Back to top"
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        xMouse.set((event.clientX - rect.left - rect.width / 2) * 0.35);
-        yMouse.set((event.clientY - rect.top - rect.height / 2) * 0.35);
-      }}
-      onMouseLeave={() => {
-        xMouse.set(0);
-        yMouse.set(0);
-      }}
-    >
-      <motion.div style={{ y: springY }}>
-        <ArrowUp size={22} strokeWidth={1.5} />
-      </motion.div>
-    </motion.button>
-  );
-}
-
-function TrustBadge() {
-  const scrollYProgress = useMotionValue(0);
-  useLenis(({ progress }) => {
-    scrollYProgress.set(progress);
-  });
-  
-  const rotate = useTransform(scrollYProgress, [0.1, 0.9], [0, 360]);
-  const y = useTransform(scrollYProgress, [0.1, 0.6], [80, -80]);
-
-  return (
-    <motion.div 
-      style={{ 
-        y, 
-        position: 'absolute',
-        top: 'clamp(82px, 10vw, 150px)',
-        right: 'clamp(40px, 8vw, 160px)',
-        zIndex: 10,
-        display: 'grid',
-        placeItems: 'center',
-        width: 'min(32vw, 240px)',
-        height: 'min(32vw, 240px)',
-        pointerEvents: 'none'
-      }}
-      aria-hidden
-    >
-      <motion.div style={{ rotate, position: 'absolute', inset: 0, willChange: 'transform' }}>
-        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-          <defs>
-            <path id="trustCircle" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" />
-          </defs>
-          <text fontSize="11" fill="var(--lime)" fontWeight="700" letterSpacing="0.1em">
-            <textPath href="#trustCircle" startOffset="0%" textLength="220" lengthAdjust="spacingAndGlyphs">
-              • CERTIFIED COACH • TRUSTED EXPERTISE 
-            </textPath>
-          </text>
-        </svg>
-      </motion.div>
-      <div style={{ position: 'absolute', display: 'grid', placeItems: 'center' }}>
-        <Flower2 color="var(--lime)" size={56} strokeWidth={1.2} />
-      </div>
-    </motion.div>
-  );
-}
-
-function Reveal({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      className={`reveal ${className}`}
-      style={{ animationDelay: `${delay}s` }}
-      initial={false}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.22 }}
+      className={className}
+      initial={reduceMotion ? false : { opacity: 0, y: 34 }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
   );
 }
 
-function SplitReveal({
-  text,
-  className = "",
-}: {
-  text: string;
-  className?: string;
-}) {
+function AnimatedWords({ text }: { text: string }) {
+  const words = text.split(" ");
   return (
-    <span className={`split-reveal ${className}`} aria-label={text}>
-      {text.split(" ").map((word, index) => (
+    <span className="animated-words" aria-label={text}>
+      {words.map((word, index) => (
         <motion.span
           aria-hidden
           key={`${word}-${index}`}
-          initial={{ y: "110%", rotate: 3 }}
-          whileInView={{ y: 0, rotate: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{
-            duration: 0.72,
-            delay: index * 0.045,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.12 + index * 0.055, ease: [0.22, 1, 0.36, 1] }}
         >
           {word}
         </motion.span>
@@ -440,1211 +173,316 @@ function SplitReveal({
   );
 }
 
-function HeroContent() {
-  const line1 = "Wellness is not a".split(" ");
-  const line2 = "destination,".split(" ");
-  const line3 = "it's a way of living.".split(" ");
-
-  const containerVariants = {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: 0.08, delayChildren: 1.8 }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }
-  };
-
-  const wordVariants: Variants = {
-    hidden: { y: "120%", rotate: 4, opacity: 0 },
-    show: { y: "0%", rotate: 0, opacity: 1, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }
-  };
-
-  const WordWrapper = ({ word }: { word: string }) => (
-    <span style={{ display: "inline-block", overflow: "hidden", paddingRight: "0.22em", paddingBottom: "0.15em", verticalAlign: "bottom" }}>
-      <motion.span style={{ display: "inline-block", transformOrigin: "left bottom" }} variants={wordVariants}>
-        {word}
-      </motion.span>
+function Pill({ children }: { children: ReactNode }) {
+  return (
+    <span className="section-pill">
+      <Sparkles size={15} />
+      {children}
     </span>
   );
-
-  return (
-    <motion.div className="hero-content" initial="hidden" animate="show" variants={containerVariants}>
-      <motion.p className="eyebrow" variants={itemVariants}>Mind. Body. Balance.</motion.p>
-      
-      <h1>
-        <span style={{ display: "block" }}>
-          {line1.map((w, i) => <WordWrapper key={`l1-${i}`} word={w} />)}
-        </span>
-        <span style={{ display: "block" }}>
-          {line2.map((w, i) => <WordWrapper key={`l2-${i}`} word={w} />)}
-        </span>
-        <em style={{ display: "block" }}>
-          {line3.map((w, i) => <WordWrapper key={`l3-${i}`} word={w} />)}
-        </em>
-      </h1>
-
-      <motion.p className="hero-copy" variants={itemVariants}>
-        I help you create sustainable habits, reduce stress and build a
-        life that feels good on the inside and out.
-      </motion.p>
-      
-      <motion.div className="hero-actions" variants={itemVariants}>
-        <MagneticButton href="#contact">Work with me</MagneticButton>
-        <MagneticButton href="#programs" variant="text">
-          Explore programs
-        </MagneticButton>
-      </motion.div>
-    </motion.div>
-  );
 }
 
-function TiltCard({ children, index }: { children: ReactNode; index: number }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
-  
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
-  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["-100%", "100%"]);
-  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["-100%", "100%"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    x.set(mouseX / width - 0.5);
-    y.set(mouseY / height - 0.5);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
+function TransformationPhoto({ item, index }: { item: (typeof transformations)[number]; index: number }) {
   return (
-    <motion.article
-      className="process-card"
-      initial={{ opacity: 0, y: 90 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.28 }}
-      transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-        position: "relative",
-        overflow: "hidden"
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <motion.div 
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "200%",
-          height: "200%",
-          background: "radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 50%)",
-          x: glareX,
-          y: glareY,
-          pointerEvents: "none",
-          opacity: 0.35,
-          mixBlendMode: "overlay",
-          zIndex: 0
-        }}
-      />
-      <div style={{ position: "relative", zIndex: 1, transform: "translateZ(30px)" }}>
-        {children}
-      </div>
-    </motion.article>
-  );
-}
-
-function MagneticButton({
-  href,
-  children,
-  variant = "primary",
-}: {
-  href: string;
-  children: ReactNode;
-  variant?: "primary" | "text";
-}) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 260, damping: 18 });
-  const springY = useSpring(y, { stiffness: 260, damping: 18 });
-
-  return (
-    <motion.a
-      href={href}
-      className={`magnetic-link ${variant}`}
-      style={{ x: springX, y: springY }}
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        x.set((event.clientX - rect.left - rect.width / 2) * 0.14);
-        y.set((event.clientY - rect.top - rect.height / 2) * 0.14);
-      }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-      whileHover={{ scale: variant === "primary" ? 1.03 : 1 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <span>{children}</span>
-      <ArrowRight size={18} strokeWidth={1.5} aria-hidden />
-    </motion.a>
-  );
-}
-
-function Logo() {
-  return (
-    <a className="logo" href="#home" aria-label="Lumina home">
-      <svg className="logo-symbol" viewBox="0 0 58 58" fill="none" aria-hidden>
-        <path d="M29 53V19" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-        <path
-          d="M29 25C18 23 12 15 12 5C23 7 29 15 29 25Z"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M29 25C40 23 46 15 46 5C35 7 29 15 29 25Z"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M29 33C17 34 8 27 6 15C19 16 27 23 29 33Z"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M29 33C41 34 50 27 52 15C39 16 31 23 29 33Z"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <span>
-        <strong>Lumina</strong>
-        <small>Wellness Coach</small>
-      </span>
-    </a>
-  );
-}
-
-function BotanicalLine() {
-  return (
-    <svg
-      className="botanical-line"
-      width="242"
-      height="96"
-      viewBox="0 0 242 96"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M8 78C43 55 68 42 101 30C139 16 177 14 229 8"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path d="M54 51C50 34 57 24 71 15C73 31 68 43 54 51Z" stroke="currentColor" />
-      <path d="M83 38C82 20 91 10 109 4C108 22 99 33 83 38Z" stroke="currentColor" />
-      <path d="M111 28C114 12 126 4 145 1C140 18 129 27 111 28Z" stroke="currentColor" />
-      <path d="M139 21C145 8 158 3 176 4C168 18 156 23 139 21Z" stroke="currentColor" />
-      <path d="M49 54C32 51 22 59 15 75C32 78 44 70 49 54Z" stroke="currentColor" />
-      <path d="M78 42C61 41 49 50 42 68C60 68 72 59 78 42Z" stroke="currentColor" />
-      <path d="M108 31C91 31 80 42 74 60C91 59 103 49 108 31Z" stroke="currentColor" />
-      <path d="M137 23C120 25 110 36 106 54C123 51 134 41 137 23Z" stroke="currentColor" />
-      <path d="M166 18C151 21 142 32 140 49C156 45 165 35 166 18Z" stroke="currentColor" />
-    </svg>
-  );
-}
-
-function ProcessThread() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"]
-  });
-
-  const pathLength = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
-  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
-
-  return (
-    <motion.div 
-      ref={containerRef} 
-      style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, opacity }}
-    >
-      <svg width="100%" height="100%" viewBox="0 0 1000 800" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="threadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--lime)" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="var(--olive)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="var(--lime)" stopOpacity="1" />
-          </linearGradient>
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-        <motion.path
-          d="M 150 150 C 350 120, 450 350, 600 250 C 750 150, 900 300, 850 450 C 800 600, 400 450, 300 600 C 200 750, 600 850, 850 700"
-          fill="none"
-          stroke="url(#threadGrad)"
-          strokeWidth="4"
-          filter="url(#glow)"
-          style={{ pathLength }}
-        />
-      </svg>
-    </motion.div>
-  );
-}
-
-function ProcessGraphic() {
-  const scrollYProgress = useMotionValue(0);
-  useLenis(({ progress }) => {
-    scrollYProgress.set(progress);
-  });
-  
-  const rotate1 = useTransform(scrollYProgress, [0.2, 0.8], [0, 320]);
-  const rotate2 = useTransform(scrollYProgress, [0.2, 0.8], [0, -280]);
-  const y = useTransform(scrollYProgress, [0.2, 0.7], [120, -120]);
-
-  return (
-    <motion.div 
-      style={{
-        position: 'absolute',
-        top: 'clamp(40px, 10vw, 150px)',
-        right: 'clamp(10px, 5vw, 80px)',
-        width: 'clamp(180px, 28vw, 400px)',
-        height: 'clamp(180px, 28vw, 400px)',
-        zIndex: 10,
-        pointerEvents: 'none',
-        y
-      }}
-      aria-hidden
-    >
-      <motion.svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, rotate: rotate1 }}>
-        <circle cx="50" cy="50" r="46" fill="none" stroke="var(--olive)" strokeWidth="1.5" strokeDasharray="3 7" opacity="0.4" />
-        <circle cx="50" cy="50" r="32" fill="none" stroke="var(--lime)" strokeWidth="1.5" strokeDasharray="14 5" />
-      </motion.svg>
-      <motion.svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, rotate: rotate2 }}>
-        <path d="M 50 14 L 50 86 M 14 50 L 86 50 M 24 24 L 76 76 M 24 76 L 76 24" stroke="var(--olive)" strokeWidth="0.8" opacity="0.3" />
-        <circle cx="50" cy="50" r="6" fill="var(--lime)" />
-        <circle cx="50" cy="50" r="16" fill="none" stroke="var(--olive)" strokeWidth="0.5" opacity="0.5" />
-      </motion.svg>
-    </motion.div>
-  );
-}
-
-function ProgramHoverList() {
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-
-  const xTo = useRef<gsap.QuickToFunc | null>(null);
-  const yTo = useRef<gsap.QuickToFunc | null>(null);
-
-  useEffect(() => {
-    if (imageRef.current) {
-      xTo.current = gsap.quickTo(imageRef.current, "x", { duration: 0.7, ease: "power3" });
-      yTo.current = gsap.quickTo(imageRef.current, "y", { duration: 0.7, ease: "power3" });
-    }
-  }, []);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (xTo.current && yTo.current) {
-      xTo.current(e.clientX);
-      yTo.current(e.clientY);
-    }
-  };
-
-  return (
-    <div className="program-list" onMouseMove={handleMouseMove} style={{ position: "relative" }}>
-      {programs.map((program, index) => (
-        <motion.article
-          className="program-card"
-          key={program.title}
-          initial={{ opacity: 0, x: index % 2 ? 120 : -120 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.88, ease: [0.22, 1, 0.36, 1] }}
-          onMouseEnter={() => setActiveImage(program.image)}
-          onMouseLeave={() => setActiveImage(null)}
-        >
-          <div>
-            <span>{program.meta}</span>
-            <h3>{program.title}</h3>
-          </div>
-          <p>{program.body}</p>
-          <MousePointer2 size={28} strokeWidth={1.2} aria-hidden />
-        </motion.article>
-      ))}
-
-      <div
-        ref={imageRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 0,
-          height: 0,
-          pointerEvents: "none",
-          zIndex: 50,
-        }}
-        aria-hidden
-      >
-        <div 
-          style={{
-             position: "absolute",
-             left: "-150px", 
-             top: "-200px",
-             width: "300px",
-             height: "400px",
-             borderRadius: "16px",
-             overflow: "hidden",
-             opacity: activeImage ? 1 : 0,
-             transform: `scale(${activeImage ? 1 : 0.8})`,
-             transition: "opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
-             boxShadow: "0 20px 40px rgba(0,0,0,0.15)"
-          }}
-        >
-          {programs.map((prog) => (
-            <Image
-              key={prog.title}
-              src={prog.image}
-              alt={prog.title}
-              fill
-              style={{
-                objectFit: "cover",
-                opacity: activeImage === prog.image ? 1 : 0,
-                transition: "opacity 0.3s ease"
-              }}
-            />
-          ))}
+    <Reveal className="ba-photo-card" delay={index * 0.05}>
+      <div className="ba-photo">
+        <Image src={item.image} alt={`${item.title} before and after transformation`} fill sizes="(max-width: 900px) 92vw, 360px" />
+        <div className="ba-photo-copy">
+          <span>{item.title}</span>
+          <p>&quot;{item.quote}&quot;</p>
+          <strong>{item.name}</strong>
         </div>
       </div>
-    </div>
-  );
-}
-
-function WellnessAudit() {
-  const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [answers, setAnswers] = useState<string[]>([]);
-
-  const quizQuestions = [
-    {
-      question: "How does your body feel on a typical morning?",
-      options: ["Energized & Light", "A bit stiff, but okay", "Exhausted & Heavy"]
-    },
-    {
-      question: "What is your biggest roadblock to feeling your best?",
-      options: ["Lack of time", "Inconsistent habits", "Stress & Overwhelm", "Not sure what to do"]
-    },
-    {
-      question: "How would you describe your ideal daily state?",
-      options: ["Calm & Grounded", "High Energy & Focused", "Pain-free & Mobile"]
-    }
-  ];
-
-  const handleNext = (answer?: string) => {
-    if (answer) {
-      setAnswers([...answers, answer]);
-    }
-    setDirection(1);
-    setStep(s => s + 1);
-  };
-
-  const variants: Variants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 40 : -40,
-      opacity: 0,
-      filter: "blur(4px)"
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? -40 : 40,
-      opacity: 0,
-      filter: "blur(4px)",
-      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-    })
-  };
-
-  return (
-    <section className="audit-section">
-      <div className="audit-container">
-        <div className="audit-header">
-          <p className="section-kicker">The Wellness Audit</p>
-          <div className="audit-progress">
-             <div className="progress-bar" style={{ width: `${(step / 4) * 100}%` }} />
-          </div>
-        </div>
-        
-        <div className="audit-card">
-          <AnimatePresence mode="wait" custom={direction}>
-            {step === 0 && (
-              <motion.div key="intro" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" className="audit-step">
-                <h2>Not sure where to begin?</h2>
-                <p>Take this 1-minute assessment to help me understand your unique needs before we ever speak.</p>
-                <button className="audit-btn-primary" onClick={() => handleNext()}>Begin Assessment <ArrowRight size={18} /></button>
-              </motion.div>
-            )}
-
-            {step > 0 && step <= quizQuestions.length && (
-              <motion.div key={step} custom={direction} variants={variants} initial="enter" animate="center" exit="exit" className="audit-step">
-                <h3>{quizQuestions[step - 1].question}</h3>
-                <div className="audit-options">
-                  {quizQuestions[step - 1].options.map((opt, i) => (
-                    <button key={i} className="audit-option-btn" onClick={() => handleNext(opt)}>
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {step === 4 && (
-              <motion.div key="outro" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" className="audit-step">
-                <Leaf size={48} strokeWidth={1} color="var(--olive)" style={{ marginBottom: 24 }} />
-                <h2>Thank you for sharing.</h2>
-                <p>Based on your responses, I have a clear picture of how we can rebuild your baseline. Let&apos;s map out your exact next steps.</p>
-                <MagneticButton href="#contact" variant="primary">Schedule Your Strategy Call</MagneticButton>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-const testimonials = [
-  {
-    name: "Sarah J.",
-    username: "sarahjwell",
-    date: "8:42 AM - May 12, 2026",
-    quote: "I used to wake up feeling already behind. Lumina completely rebuilt my foundation. For the first time in years, I feel light.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=300&h=300&auto=format&fit=crop",
-    metrics: { replies: "18", reposts: "72", likes: "1.2K" },
-  },
-  {
-    name: "Elena M.",
-    username: "elena.moves",
-    date: "6:15 PM - May 7, 2026",
-    quote: "The approach is so gentle yet remarkably profound. I finally have sustainable habits that don't feel like a chore.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300&h=300&auto=format&fit=crop",
-    metrics: { replies: "11", reposts: "54", likes: "948" },
-  },
-  {
-    name: "Marcus T.",
-    username: "marcustreset",
-    date: "11:03 AM - Apr 28, 2026",
-    quote: "I thought stress was the price of my career. The Deep Wellness Lab changed everything. I have my energy back.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&h=300&auto=format&fit=crop",
-    metrics: { replies: "24", reposts: "91", likes: "1.8K" },
-  },
-  {
-    name: "Amira L.",
-    username: "amirainflow",
-    date: "9:31 PM - Apr 19, 2026",
-    quote: "A truly transformative experience. I learned how to listen to my body instead of constantly fighting it.",
-    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=300&h=300&auto=format&fit=crop",
-    metrics: { replies: "15", reposts: "63", likes: "1.1K" },
-  }
-];
-
-function TweetTestimonialCard({
-  testimonial,
-}: {
-  testimonial: (typeof testimonials)[number];
-}) {
-  return (
-    <article
-      className="tweet-card"
-      style={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        flexShrink: 0,
-        width: "clamp(310px, 34vw, 430px)",
-        minHeight: 268,
-        padding: 22,
-        overflow: "hidden",
-        border: "1px solid var(--line)",
-        borderRadius: 18,
-        color: "var(--ink)",
-        background:
-          "linear-gradient(180deg, var(--paper), rgba(255, 255, 255, 0.68)), rgba(255, 255, 255, 0.58)",
-        boxShadow: "0 18px 58px rgba(39, 46, 31, 0.08)",
-        backdropFilter: "blur(18px)",
-      }}
-    >
-      <div
-        className="tweet-glow"
-        style={{
-          position: "absolute",
-          inset: "-45% -20% auto auto",
-          width: 220,
-          height: 220,
-          borderRadius: "50%",
-          background: "rgba(var(--neon-lime-rgb), 0.3)",
-          filter: "blur(46px)",
-          pointerEvents: "none",
-        }}
-        aria-hidden
-      />
-      <header
-        className="tweet-header"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "grid",
-          gridTemplateColumns: "48px 1fr auto",
-          alignItems: "center",
-          gap: 12,
-        }}
-      >
-        <Image
-          className="tweet-avatar"
-          src={testimonial.image}
-          alt={`${testimonial.name} portrait`}
-          width={48}
-          height={48}
-          style={{
-            width: 48,
-            height: 48,
-            border: "1px solid var(--line)",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
-        <div className="tweet-identity" style={{ minWidth: 0 }}>
-          <div
-            className="tweet-name-line"
-            style={{ display: "flex", alignItems: "center", gap: 6 }}
-          >
-            <strong style={{ fontSize: "0.98rem", fontWeight: 800, lineHeight: 1.1 }}>
-              {testimonial.name}
-            </strong>
-            <span
-              className="tweet-verified"
-              style={{
-                display: "inline-grid",
-                width: 18,
-                height: 18,
-                placeItems: "center",
-                borderRadius: "50%",
-                color: "var(--ink)",
-                background: "var(--lime)",
-              }}
-              aria-label="Verified client"
-            >
-              <Check size={12} strokeWidth={3} aria-hidden />
-            </span>
-          </div>
-          <span style={{ color: "var(--muted)", fontSize: "0.88rem" }}>
-            @{testimonial.username}
-          </span>
-        </div>
-        <MoreHorizontal
-          className="tweet-more"
-          size={20}
-          strokeWidth={1.8}
-          style={{ color: "var(--muted)" }}
-          aria-hidden
-        />
-      </header>
-
-      <p
-        className="tweet-body"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          margin: "22px 0 18px",
-          color: "#20241d",
-          fontSize: "clamp(1rem, 1.3vw, 1.18rem)",
-          lineHeight: 1.62,
-        }}
-      >
-        {testimonial.quote}
-      </p>
-
-      <time
-        className="tweet-date"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "block",
-          marginTop: "auto",
-          paddingTop: 6,
-          color: "var(--muted)",
-          fontSize: "0.88rem",
-        }}
-      >
-        {testimonial.date}
-      </time>
-
-      <footer
-        className="tweet-actions"
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 20,
-          marginTop: 18,
-          paddingTop: 18,
-          borderTop: "1px solid var(--line)",
-        }}
-        aria-label="Testimonial engagement"
-      >
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
-          <MessageCircle size={17} strokeWidth={1.8} aria-hidden />
-          {testimonial.metrics.replies}
-        </span>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
-          <Repeat2 size={17} strokeWidth={1.8} aria-hidden />
-          {testimonial.metrics.reposts}
-        </span>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--muted)", fontSize: "0.88rem", fontWeight: 700 }}>
-          <Heart size={17} strokeWidth={1.8} aria-hidden />
-          {testimonial.metrics.likes}
-        </span>
-      </footer>
-    </article>
-  );
-}
-
-function ClientTransformations() {
-  const reduceMotion = useReducedMotion();
-
-  const marqueeItems = [...testimonials, ...testimonials, ...testimonials, ...testimonials];
-
-  return (
-    <section className="testimonials-section" style={{ paddingTop: "clamp(120px, 14vw, 180px)" }}>
-      <div className="testimonials-header">
-        <p className="section-kicker">Client Transformations</p>
-        <h2>Real stories. Real balance.</h2>
-      </div>
-
-      <div
-        className="carousel-wrapper tweet-carousel"
-        style={{
-          overflow: "hidden",
-          padding: "0 clamp(28px, 6vw, 100px)",
-          cursor: "default",
-          maskImage: "linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%)",
-        }}
-      >
-        <motion.div 
-          className="carousel-track"
-          style={{
-            display: "flex",
-            flexWrap: "nowrap",
-            gap: 24,
-            width: "max-content",
-            padding: "8px 0 18px",
-          }}
-          animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-        >
-          {marqueeItems.map((t, i) => (
-            <TweetTestimonialCard testimonial={t} key={`${t.username}-${i}`} />
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function BlogSection() {
-  const reduceMotion = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const featuredPost = blogPosts[0];
-  const secondaryPosts = blogPosts.slice(1);
-
-  useEffect(() => {
-    if (reduceMotion || !sectionRef.current) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        ".blog-gsap-reveal",
-        { autoAlpha: 0, y: 56, filter: "blur(10px)" },
-        {
-          autoAlpha: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 1,
-          stagger: 0.09,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 72%",
-          },
-        }
-      );
-
-      gsap.to(".blog-orb", {
-        yPercent: -18,
-        rotate: 18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-    }, sectionRef);
-
-    return () => context.revert();
-  }, [reduceMotion]);
-
-  const tiltCard = (event: React.MouseEvent<HTMLElement>) => {
-    if (reduceMotion) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 7;
-    const rotateX = -((event.clientY - rect.top) / rect.height - 0.5) * 7;
-
-    gsap.to(event.currentTarget, {
-      rotateX,
-      rotateY,
-      y: -8,
-      duration: 0.45,
-      ease: "power3.out",
-      transformPerspective: 900,
-    });
-  };
-
-  const resetTilt = (event: React.MouseEvent<HTMLElement>) => {
-    if (reduceMotion) return;
-    gsap.to(event.currentTarget, {
-      rotateX: 0,
-      rotateY: 0,
-      y: 0,
-      duration: 0.55,
-      ease: "elastic.out(1, 0.55)",
-    });
-  };
-
-  return (
-    <section ref={sectionRef} id="blog" className="blog-section" aria-label="Wellness blog">
-      <div className="blog-orb orb-one" aria-hidden />
-      <div className="blog-orb orb-two" aria-hidden />
-
-      <div className="blog-section-header blog-gsap-reveal">
-        <p className="section-kicker">Wellness journal</p>
-        <h2>Field notes for a calmer, better-lived week.</h2>
-        <a className="blog-view-all" href="#contact">
-          <BookOpen size={18} strokeWidth={1.7} aria-hidden />
-          Start with a coaching call
-        </a>
-      </div>
-
-      <div className="blog-category-rail blog-gsap-reveal" aria-label="Blog categories">
-        {blogCategories.map((category) => (
-          <span key={category}>{category}</span>
-        ))}
-      </div>
-
-      <div className="blog-layout">
-        <article
-          className="blog-featured blog-gsap-reveal"
-          onMouseMove={tiltCard}
-          onMouseLeave={resetTilt}
-        >
-          <div className="blog-card-glow" aria-hidden />
-          <div className="blog-featured-image">
-            <Image
-              src={featuredPost.image}
-              alt={featuredPost.title}
-              fill
-              sizes="(max-width: 900px) 92vw, 48vw"
-            />
-          </div>
-          <div className="blog-featured-content">
-            <div className="blog-meta">
-              <span>{featuredPost.category}</span>
-              <span>
-                <Clock size={15} strokeWidth={1.8} aria-hidden />
-                {featuredPost.readTime}
-              </span>
-            </div>
-            <h3>{featuredPost.title}</h3>
-            <p>{featuredPost.body}</p>
-            <a href="#contact" className="blog-card-link">
-              Read the guide
-              <ArrowRight size={18} strokeWidth={1.6} aria-hidden />
-            </a>
-          </div>
-        </article>
-
-        <div className="blog-side-list">
-          {secondaryPosts.map((post, index) => (
-            <article
-              className="blog-mini-card blog-gsap-reveal"
-              key={post.title}
-              onMouseMove={tiltCard}
-              onMouseLeave={resetTilt}
-            >
-              <div className="blog-mini-index">0{index + 2}</div>
-              <div className="blog-mini-image">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 900px) 28vw, 180px"
-                />
-              </div>
-              <div>
-                <div className="blog-meta">
-                  <span>{post.category}</span>
-                  <span>{post.readTime}</span>
-                </div>
-                <h3>{post.title}</h3>
-                <p>{post.body}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div className="blog-bottom-bar blog-gsap-reveal">
-        <Sparkles size={19} strokeWidth={1.6} aria-hidden />
-        <span>New journal notes every week for calmer routines and steadier energy.</span>
-      </div>
-    </section>
+    </Reveal>
   );
 }
 
 export default function WellnessLanding() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const reduceMotion = useReducedMotion();
-  const scrollYProgress = useMotionValue(0);
-  
-  useLenis(({ progress }) => {
-    scrollYProgress.set(progress);
-  });
-  const imageScale = useTransform(scrollYProgress, [0, 0.22], [1, 1.07]);
-  const imageY = useTransform(scrollYProgress, [0, 0.22], [0, -56]);
-  const heroTextX = useTransform(scrollYProgress, [0, 0.35], [0, -90]);
-  const processRotate = useTransform(scrollYProgress, [0.28, 0.74], [0, 42]);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <main id="home" className="lumina-page">
-      <Loader />
-      <CursorAura />
-      <ScrollRail />
-      <BackToTop />
-      <header className="navbar">
-        <Logo />
-
-        <nav className="desktop-nav" aria-label="Primary navigation">
+    <main className="mission-page">
+      <header className="mission-nav">
+        <a className="mission-brand" href="#home">
+          <strong>Mission 444</strong>
+          <Leaf size={24} />
+        </a>
+        <nav aria-label="Primary navigation">
           {navItems.map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`}>
-              {item}
-            </a>
+            <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-")}`}>{item}</a>
           ))}
         </nav>
-
-        <a className="nav-cta" href="#contact">
-          Work with me
+        <a className="coach-chip" href="#coaches">
+          <Image src="/wellness-hero.png" alt="" width={34} height={34} />
+          Asuhar B
         </a>
-
-        <button
-          className="menu-button"
-          type="button"
-          aria-label="Toggle navigation menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <X size={23} /> : <Menu size={23} />}
-        </button>
-
-        {menuOpen ? (
-          <motion.nav
-            className="mobile-nav"
-            aria-label="Mobile navigation"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-          >
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item}
-              </a>
-            ))}
-            <a href="#contact" onClick={() => setMenuOpen(false)}>
-              Work with me
-            </a>
-          </motion.nav>
-        ) : null}
       </header>
 
-      <section className="hero">
-        <div className="hero-glow" />
-        <motion.div
-          className="hero-kinetic-word"
-          style={reduceMotion ? undefined : { x: heroTextX }}
-          aria-hidden
-        >
-          BREATHE
-        </motion.div>
-
-        <HeroContent />
-
-        <motion.div
-          className="hero-image"
-          style={reduceMotion ? undefined : { scale: imageScale, y: imageY }}
-        >
+      <section id="home" className="mission-hero">
+        <div className="hero-banner">
+          <div className="hero-copy">
+            <h1><AnimatedWords text="Your Wellness Journey Starts Here." /></h1>
+            <p>Tailored wellness plans for your body, mind, and goals with coach Asuhar B.</p>
+            <div className="hero-actions">
+              <a className="dark-btn" href="#coaches">Start Free Trial</a>
+              <a className="light-btn" href="https://wa.me/919809745714" target="_blank" rel="noopener noreferrer">Book a Free Consultation</a>
+            </div>
+          </div>
           <Image
-            src="/wellness-hero.png"
-            alt="Wellness coach breathing deeply in golden mountain light"
+            src="/mission444/hero-photo.jpg"
+            alt="Woman meditating among tropical plants"
             fill
             priority
-            sizes="(max-width: 900px) 100vw, 68vw"
+            sizes="(max-width: 900px) 100vw, 1320px"
           />
-        </motion.div>
-
-        <motion.div
-          className="floating-badge"
-          animate={reduceMotion ? undefined : { y: [0, -13, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Leaf size={30} strokeWidth={1.1} aria-hidden />
-          <p>Small steps create big changes.</p>
-          <span />
-        </motion.div>
-
-        <BotanicalLine />
-
-        <a className="scroll-indicator" href="#about">
-          <span>Scroll to discover</span>
-          <ArrowDown size={27} strokeWidth={1.25} aria-hidden />
-        </a>
-
-        <svg
-          className="wave-divider"
-          viewBox="0 0 1440 150"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <path
-            d="M0 63C151 125 291 113 461 90C656 64 801 106 979 91C1173 75 1276 45 1440 76V150H0V63Z"
-            fill="var(--warm-beige)"
-          />
-        </svg>
-      </section>
-
-      <section className="motion-strip" aria-label="Wellness specialties">
-        <motion.div
-          className="strip-row"
-          animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
-          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
-        >
-          {[...specialties, ...specialties, ...specialties, ...specialties, ...specialties].map((item, index) => (
-            <React.Fragment key={`${item}-${index}`}>
-              <span>{item}</span>
-              <Leaf size={14} strokeWidth={2} style={{ opacity: 0.5, color: "var(--olive)" }} aria-hidden />
-            </React.Fragment>
-          ))}
-        </motion.div>
-      </section>
-
-      <section id="about" className="intro-section">
-        <Reveal className="intro-copy">
-          <p className="script-line">hi, I&apos;m</p>
-          <h2>
-            <SplitReveal text="I&apos;m here to help you" />
-            <em>
-              <SplitReveal text="become your best self." />
-            </em>
-          </h2>
-          <p>
-            As a certified wellness coach, I combine proven strategies with a
-            holistic approach to help you feel more energized, confident and in
-            control.
-          </p>
-        </Reveal>
-
-        <div className="feature-grid">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-
-            return (
-              <Reveal
-                key={feature.title}
-                className="feature-card"
-                delay={0.08 + index * 0.08}
-              >
-                <motion.div
-                  className={`feature-icon ${feature.tone}`}
-                  whileHover={{ scale: 1.08, rotate: index === 1 ? 4 : -4 }}
-                >
-                  <Icon size={42} strokeWidth={1.15} aria-hidden />
-                </motion.div>
-                <h3>{feature.title}</h3>
-                <p>{feature.body}</p>
-              </Reveal>
-            );
-          })}
         </div>
-      </section>
 
-      <section id="services" className="good-at-section">
-        <Reveal>
-          <p className="section-kicker">We are good at</p>
-          <h2>Building a life your nervous system can trust.</h2>
-        </Reveal>
-        <TrustBadge />
-        <div className="good-at-grid">
-          {specialties.map((item, index) => (
-            <motion.article
-              className="good-at-card"
-              style={{ padding: 'clamp(16px, 1.8vw, 24px)' }}
-              key={item}
-              initial={{ opacity: 0, y: 70, rotate: index % 2 ? 2 : -2 }}
-              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-              viewport={{ once: true, amount: 0.34 }}
-              transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={reduceMotion ? undefined : { y: -10, rotate: index % 2 ? -1.5 : 1.5 }}
-            >
-              <span>0{index + 1}</span>
-              <h3 style={{ fontSize: 'clamp(1.5rem, 2.1vw, 2.6rem)', wordBreak: 'break-word', hyphens: 'auto' }}>
-                {item}
-              </h3>
-              <p>
-                Personalized practices that feel grounded, doable and quietly powerful.
-              </p>
-            </motion.article>
-          ))}
-        </div>
-      </section>
-
-      <section className="process-intro">
-        <ProcessGraphic />
-        <Reveal>
-          <h2>We believe in a process that works.</h2>
-          <p>
-            If you have an idea of the life you want, even if it is only a rough
-            feeling, we shape it into rituals you can actually keep.
-          </p>
-        </Reveal>
-      </section>
-
-      <section className="process-stage" aria-label="Coaching process">
-        <ProcessThread />
-        <motion.div
-          className="process-orbit"
-          style={reduceMotion ? undefined : { rotate: processRotate }}
-          aria-hidden
-        >
-          {processSteps.map((step, index) => (
-            <span key={step.title} className={`orbit-dot dot-${index + 1}`} />
-          ))}
-        </motion.div>
-        <div className="process-grid" style={{ perspective: "1000px", position: "relative", zIndex: 2 }}>
-          {processSteps.map((step, index) => (
-            <TiltCard key={step.title} index={index}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{step.title}</h3>
-              <ul>
-                {step.points.map((point) => (
-                  <li key={point}>
-                    <Check size={15} strokeWidth={2} aria-hidden />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-            </TiltCard>
-          ))}
-        </div>
-      </section>
-
-      <section id="programs" className="featured-section">
-        <div className="featured-header">
-          <p className="section-kicker">Featured programs</p>
-          <h2>A system for every season.</h2>
-        </div>
-        <ProgramHoverList />
-      </section>
-
-      <ClientTransformations />
-
-      <BlogSection />
-
-      <WellnessAudit />
-
-      <section id="contact" className="contact-finale">
-        <Reveal>
-          <p className="section-kicker">Ready when you are</p>
-          <h2>Let&apos;s make your wellbeing feel less complicated.</h2>
-          <MagneticButton href="mailto:hello@luminawellness.co">Schedule Call</MagneticButton>
-        </Reveal>
-      </section>
-
-      <footer className="site-footer">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <Logo />
-            <p>Helping you build a life that feels good on the inside and out.</p>
-            <form className="footer-newsletter" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" placeholder="Join our newsletter" aria-label="Email for newsletter" />
-              <button type="submit" aria-label="Subscribe"><ArrowRight size={18} /></button>
-            </form>
-          </div>
-          <div className="footer-links">
-            <div className="link-group">
-              <h4>Navigation</h4>
-              <a href="#home">Home</a>
-              <a href="#about">About</a>
-              <a href="#services">Services</a>
-              <a href="#programs">Programs</a>
+        <div className="hero-card-row">
+          <Reveal className="image-tile" delay={0.05}>
+            <Image src="/mission444/tile-flex.jpg" alt="Improved flexibility yoga pose" fill sizes="390px" />
+            <span>View Video</span>
+            <button aria-label="Open flexibility video"><ArrowRight size={20} /></button>
+            <h3>Improved Flexibility</h3>
+          </Reveal>
+          <Reveal className="image-tile" delay={0.12}>
+            <Image src="/mission444/tile-calm.jpg" alt="Meditation for stress reduction" fill sizes="390px" />
+            <span>View Video</span>
+            <button aria-label="Open stress reduction video"><ArrowRight size={20} /></button>
+            <h3>Stress Reduction</h3>
+          </Reveal>
+          <Reveal className="image-tile wide" delay={0.18}>
+            <Image src="/mission444/tile-class.jpg" alt="Group yoga class" fill sizes="460px" />
+            <span>Join Our Class</span>
+            <button aria-label="Join class"><ArrowRight size={20} /></button>
+            <div className="join-copy">
+              <h3>Breathe. Stretch. Relax. Begin Your Yoga Journey!</h3>
+              <form onSubmit={(event) => event.preventDefault()}>
+                <input aria-label="Your email" placeholder="Your Email" type="email" />
+                <button type="submit">Get Started</button>
+              </form>
             </div>
-            <div className="link-group">
-              <h4>Socials</h4>
-              <a href="#instagram">Instagram</a>
-              <a href="#linkedin">LinkedIn</a>
-              <a href="#twitter">Twitter</a>
-            </div>
-          </div>
+          </Reveal>
         </div>
-        
-        <div className="footer-massive-text" aria-hidden>
-          MISSION 444
-        </div>
+      </section>
 
-        <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Lumina Wellness. All rights reserved.</p>
-          <div className="footer-legal">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-          </div>
+      <section id="why-us" className="why-clone">
+        <Pill>Key Benefits</Pill>
+        <h2>Why Choose Us?</h2>
+        <div className="benefit-layout">
+          <Image className="meditation-person" src="/mission444/benefit-person.jpg" alt="Meditating wellness coach" width={420} height={520} />
+          {featureCards.map(([title, text, icon], index) => (
+            <Reveal className={`benefit-pop pop-${index + 1}`} delay={index * 0.04} key={title}>
+              <span>{icon}</span>
+              <div>
+                <strong>{title}</strong>
+                <p>{text}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
+      </section>
+
+      <section id="coaches" className="coach-section">
+        <Pill>Coach-Profiles</Pill>
+        <h2>Meet Your Wellness Coaches</h2>
+        <div className="coach-grid">
+          {coaches.map((coach, index) => (
+            <Reveal className="coach-card" delay={index * 0.08} key={coach.role}>
+              <div className="coach-image">
+                <Image src={coach.image} alt={`${coach.name} ${coach.role}`} fill sizes="(max-width: 900px) 90vw, 380px" />
+                <span>{coach.tag}</span>
+              </div>
+              <div className="coach-body">
+                <div className="coach-title">
+                  <h3>{coach.role}</h3>
+                  <span><Star size={16} fill="currentColor" /> {coach.rating}</span>
+                </div>
+                <p><UserRound size={15} /> {coach.name}</p>
+                {coach.lines.map((line) => <p key={line}>🦋 {line}</p>)}
+                <a href="https://wa.me/919809745714" target="_blank" rel="noopener noreferrer">Book a Session <ArrowRight size={18} /></a>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <section id="features" className="journey-section">
+        <Pill>Features</Pill>
+        <h2>Empower Your Wellness Journey</h2>
+        <div className="dashboard-grid">
+          <Reveal className="dash-card client-plan">
+            <span className="dash-icon">📋</span>
+            <h3>Custom Wellness Plans</h3>
+            <p>Get a tailored plan for fitness, nutrition, and mindfulness.</p>
+            {["Cameron Williamson", "Brooklyn Simmons"].map((name, index) => (
+              <div className="client-row" key={name}>
+                <Image src={index ? "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=120&auto=format&fit=crop" : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&auto=format&fit=crop"} alt="" width={42} height={42} />
+                <div><strong>{name}</strong><small>📊 Progress: {index ? "80" : "60"}% · 🧘 30min · 🍏 Diet: 1500 Cal</small></div>
+                <em>{index ? "80" : "60"}%</em>
+              </div>
+            ))}
+          </Reveal>
+          <Reveal className="dash-card video-coach" delay={0.05}>
+            <span className="dash-icon">�</span>
+            <h3>WhatsApp Messaging</h3>
+            <p>Connect with certified wellness experts via WhatsApp.</p>
+            <Image src="/mission444/video-coach.jpg" alt="Live video coaching session" fill sizes="380px" />
+          </Reveal>
+          <Reveal className="dash-card schedule-card" delay={0.1}>
+            <span className="dash-icon">🗓️</span>
+            <h3>Flexible Scheduling</h3>
+            <p>Book and manage your coaching sessions at your convenience.</p>
+            {["Jerome Bell", "Jacob Jones"].map((name, index) => (
+              <div className="schedule-row" key={name}>
+                <Image src={index ? "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=120&auto=format&fit=crop" : "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=120&auto=format&fit=crop"} alt="" width={38} height={38} />
+                <strong>{name}</strong>
+                <span><CalendarDays size={16} /> {index ? "16/03/2025" : "12/03/2025"}</span>
+              </div>
+            ))}
+            <button>Reschedule</button>
+          </Reveal>
+          <Reveal className="dash-card message-card" delay={0.12}>
+            <span className="dash-icon">💬</span>
+            <h3>WhatsApp Messaging</h3>
+            <p>Stay connected with your coach anytime, anywhere.</p>
+            <div className="chat-lines">
+              <span>Hey Coach, how many times should I work out per week?</span>
+              <strong>It depends on your goal.</strong>
+              <span>What kind of exercises should I focus on?</span>
+              <strong>A mix of strength training and yoga.</strong>
+            </div>
+          </Reveal>
+          <Reveal className="dash-card progress-card" delay={0.16}>
+            <span className="dash-icon">📈</span>
+            <h3>Progress Tracking</h3>
+            <p>Monitor your achievements with insightful analytics.</p>
+            <svg viewBox="0 0 640 230" aria-hidden>
+              <path d="M20 190 C80 150 110 170 150 135 C195 95 205 40 270 60 C340 85 315 145 380 150 C440 155 450 182 510 172 C560 164 580 178 620 170" />
+              <circle cx="270" cy="60" r="8" />
+            </svg>
+            <div className="weeks"><span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span><span>Week 5</span><span>Week 6</span></div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="testimonials" className="stories-section">
+        <Pill>Success-Stories</Pill>
+        <h2>Testimonials</h2>
+        <Reveal className="testimonial-marquee">
+          <div className="testimonial-track">
+            {stories.map((story, index) => (
+              <div className="tweet-card" key={story.name}>
+                <header className="tweet-header">
+                  <Image src={story.image} alt={story.name} width={48} height={48} className="tweet-avatar" />
+                  <div className="tweet-user-info">
+                    <strong>{story.name}<BadgeCheck size={16} fill="currentColor" /></strong>
+                    <span>@{story.name.toLowerCase().replace(" ", "_")}</span>
+                  </div>
+                  <MoreHorizontal size={21} />
+                </header>
+                <p className="tweet-body">&quot;{story.quote}&quot;</p>
+                <div className="tweet-footer">
+                  <span className="tweet-time">9:41 AM · {["Oct 12", "Oct 14", "Oct 18", "Oct 22"][index] || "Oct 25"}, 2025</span>
+                  <div className="tweet-stats">
+                    <span><Heart size={16} /> {124 + index * 42}</span>
+                    <span><Repeat2 size={16} /> {12 + index * 7}</span>
+                    <span><MessageCircle size={16} /> {5 + index * 3}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="testimonial-track" aria-hidden="true">
+            {stories.map((story, index) => (
+              <div className="tweet-card" key={`dup-${story.name}`}>
+                <header className="tweet-header">
+                  <Image src={story.image} alt={story.name} width={48} height={48} className="tweet-avatar" />
+                  <div className="tweet-user-info">
+                    <strong>{story.name}<BadgeCheck size={16} fill="currentColor" /></strong>
+                    <span>@{story.name.toLowerCase().replace(" ", "_")}</span>
+                  </div>
+                  <MoreHorizontal size={21} />
+                </header>
+                <p className="tweet-body">&quot;{story.quote}&quot;</p>
+                <div className="tweet-footer">
+                  <span className="tweet-time">9:41 AM · {["Oct 12", "Oct 14", "Oct 18", "Oct 22"][index] || "Oct 25"}, 2025</span>
+                  <div className="tweet-stats">
+                    <span><Heart size={16} /> {124 + index * 42}</span>
+                    <span><Repeat2 size={16} /> {12 + index * 7}</span>
+                    <span><MessageCircle size={16} /> {5 + index * 3}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </section>
+
+      <section id="transformations" className="before-after-section">
+        <Pill>Before-After</Pill>
+        <h2>Before &amp; After Transformations</h2>
+        <p className="section-sub">No subscription plans here, just real coaching milestones and visible lifestyle change.</p>
+        <div className="ba-grid">
+          {transformations.map((item, index) => <TransformationPhoto item={item} index={index} key={item.title} />)}
+        </div>
+        <p className="results-disclaimer">Disclaimer: these results are not typical, individual results may vary.</p>
+      </section>
+
+      <section className="asuhar-quote-section">
+        <div className="asuhar-quote-card">
+          <div className="asuhar-copy">
+            <Pill>Coach Quote</Pill>
+            <h2>“Your transformation starts when your daily promise becomes non-negotiable.”</h2>
+            <p>Asuhar B guides Mission 444 clients with structure, accountability, and calm discipline.</p>
+          </div>
+          <Image src="/mission444/asuhar-cutout.png" alt="Asuhar B" width={490} height={645} className="asuhar-cutout" />
+        </div>
+      </section>
+
+      <section id="faq" className="faq-clone">
+        <Pill>FAQ</Pill>
+        <h2>Got Questions? We&apos;ve Got Answers!</h2>
+        <div className="faq-grid">
+          {faqs.map((faq, index) => (
+            <Reveal className={`faq-row ${openFaq === index ? "open" : ""}`} delay={index * 0.04} key={faq}>
+              <button type="button" onClick={() => setOpenFaq(openFaq === index ? null : index)}>
+                {faq}
+                {openFaq === index ? <X size={18} /> : <Plus size={18} />}
+              </button>
+              {openFaq === index ? <p>Mission 444 gives you a simple guided path, coach support, and progress tools so every step feels clear.</p> : null}
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <footer className="mission-footer">
+        <div className="footer-branding">
+          <a className="mission-brand" href="#home"><strong>Mission 444</strong><Leaf size={24} /></a>
+          <p>Empowering your wellness journey with expert coaching in fitness, nutrition, and mindfulness. Transform your health with personalized guidance tailored to your goals.</p>
+          <div className="socials"><span>◎</span><span>𝕏</span><span>f</span><span>in</span></div>
+        </div>
+        <div className="footer-links">
+          <div><strong>Quick Links</strong><a href="#home">Home</a><a href="#coaches">Coaches</a><a href="#transformations">Transformations</a><a href="#faq">FAQs</a></div>
+          <div><strong>Support & Help</strong><a href="#chat">AI Chat</a><a href="https://wa.me/919809745714" target="_blank" rel="noopener noreferrer">WhatsApp Coach</a><a href="#faq">Privacy Policy</a></div>
+        </div>
+        <small>© 2026 Mission 444. All rights reserved.</small>
       </footer>
+
+      <a id="call" className="floating-call" href="https://wa.me/919809745714" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Mission 444">
+        <MessageCircle size={21} />
+        <span>WhatsApp</span>
+      </a>
+      <button id="chat" className="floating-chat" type="button" onClick={() => setChatOpen((open) => !open)} aria-label="Open AI chat">
+        <Bot size={23} />
+      </button>
+      {chatOpen ? (
+        <motion.aside className="ai-chat" initial={{ opacity: 0, y: 18, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}>
+          <header><Bot size={18} /> Mission 444 AI Coach <button type="button" onClick={() => setChatOpen(false)}><X size={16} /></button></header>
+          <p>Hi, I&apos;m your AI wellness assistant. Ask about routines, coach availability, or before/after goals.</p>
+          <div><MessageCircle size={16} /> Try: “Create my 7-day calm plan.”</div>
+        </motion.aside>
+      ) : null}
     </main>
   );
 }
